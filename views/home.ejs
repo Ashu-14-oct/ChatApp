@@ -1,0 +1,120 @@
+<script src="https://cdn.socket.io/4.5.0/socket.io.min.js"></script>
+<body>
+    <% if( !locals.user ) {%>
+        <section class="vh-100">
+            <div class="container-fluid h-custom">
+                <div class="row d-flex justify-content-center align-items-center h-100">
+                    <div class="col-md-9 col-lg-6 col-xl-5 mt-5">
+                        <img src="https://static.vecteezy.com/system/resources/previews/004/451/055/original/online-dating-isometric-color-illustration-real-world-couple-in-love-social-network-profile-website-infographic-online-relationship-3d-concept-liking-socializing-webpage-mobile-app-design-vector.jpg"
+                            class="img-fluid" alt="Sample image">
+                    </div>
+                    <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+                        <form action="/create-session" method="post">
+                            <div class="form-outline mb-4">
+                                <input type="email" name="email" id="form3Example3"
+                                    class="form-control form-control-lg"
+                                    placeholder="Enter a valid email address" />
+                                <label class="form-label" for="form3Example3">Email address</label>
+                            </div>
+                            <div class="form-outline mb-3">
+                                <input type="password" name="password" id="form3Example4"
+                                    class="form-control form-control-lg" placeholder="Enter password" />
+                                <label class="form-label" for="form3Example4">Password</label>
+                            </div>
+                            <div class="mb-0 w-50 p-2">
+                                <button type="submit" class="btn btn-primary ">Sign In</button>
+                                <p class="small fw-bold mt-2 pt-1 mb-0">Don't have an account? <a
+                                        href="/user/sign-up" class="link-danger">Register</a></p>
+                            </div>
+                        </form> 
+                    </div>
+                </div>
+            </div>
+            
+        </section>
+    <% } else{ %>
+
+      <section style="background-color: #eee; height: 100vh; width: 100vw;">
+        <div class="container py-5">
+        
+          <div class="row d-flex justify-content-center">
+            <div class="col-md-8 col-lg-6 col-xl-4">
+        
+              <div class="card" id="chat1" style="border-radius: 15px; ">
+                <div
+                  class="card-header d-flex justify-content-between align-items-center p-3 bg-success text-white border-bottom-0"
+                  style="border-top-left-radius: 15px; border-top-right-radius: 15px;">
+                  <i class="fas fa-angle-left"></i>
+                  <p class="mb-0 fw-bold">Live chat</p>
+                  <i class="fas fa-times"></i>
+                </div>
+                <div class="card-body">
+        
+                  <div id="chat-box" class="mb-4" style="height: 200px; overflow-y: scroll;">
+                    <!-- chat messages will be displayed here -->
+                  </div>
+        
+                  <form id="chat-form">
+                    <div class="form-outline">
+                      <textarea class="form-control" id="message-textarea" rows="2" placeholder="Type your message here..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-success mt-3">Send</button>
+                  </form>
+        
+                </div>
+              </div>
+        
+            </div>
+          </div>
+        
+        </div>
+      </section>
+      
+      <script>
+        const chatBox = document.getElementById('chat-box');
+        const chatForm = document.getElementById('chat-form');
+        const messageTextarea = document.getElementById('message-textarea');
+        const socket = io('http://localhost:8000'); // initialize Socket.io client
+      
+        // add message to chat box
+        function addMessage(message, sender) {
+          const messageDiv = document.createElement('div');
+          messageDiv.classList.add('d-flex', 'flex-row', 'justify-content-' + sender, 'mb-4');
+          const messageContentDiv = document.createElement('div');
+          messageContentDiv.classList.add('p-3', sender === 'start' ? 'ms-3' : 'me-3', 'border');
+          messageContentDiv.style.borderRadius = '15px';
+          messageContentDiv.style.backgroundColor = sender === 'start' ? 'rgba(57, 192, 237,.2)' : '#fbfbfb';
+          const messageText = document.createElement('p');
+          messageText.classList.add('small', 'mb-0');
+          messageText.innerText = message;
+          messageContentDiv.appendChild(messageText);
+          messageDiv.appendChild(messageContentDiv);
+          chatBox.appendChild(messageDiv);
+          chatBox.scrollTop = chatBox.scrollHeight;
+        }
+      
+        // handle message submission
+        chatForm.addEventListener('submit', event => {
+          event.preventDefault();
+          const message = messageTextarea.value.trim();
+          if (message.length > 0) {
+            // emit message to server
+            socket.emit('chat message', { message });
+            messageTextarea.value = '';
+          }
+        });
+      
+        // listen for incoming messages from server
+        socket.on('chat message', msg => {
+          console.log('---->i am chat mess');
+          const message = msg.message.trim();
+          if (message.length > 0) {
+            addMessage(message, 'start');
+          }
+        });
+      </script>
+      
+      <!-- <script src="http://localhost:8000/socket.io/socket.io.js"></script -->
+      
+    <% } %>
+</body>
