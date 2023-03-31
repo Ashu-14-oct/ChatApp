@@ -70,50 +70,53 @@
         </div>
       </section>
       
-      <script>
-        const chatBox = document.getElementById('chat-box');
-        const chatForm = document.getElementById('chat-form');
-        const messageTextarea = document.getElementById('message-textarea');
-        const socket = io('http://localhost:8000'); // initialize Socket.io client
-      
-        // add message to chat box
-        function addMessage(message, sender) {
-          const messageDiv = document.createElement('div');
-          messageDiv.classList.add('d-flex', 'flex-row', 'justify-content-' + sender, 'mb-4');
-          const messageContentDiv = document.createElement('div');
-          messageContentDiv.classList.add('p-3', sender === 'start' ? 'ms-3' : 'me-3', 'border');
-          messageContentDiv.style.borderRadius = '15px';
-          messageContentDiv.style.backgroundColor = sender === 'start' ? 'rgba(57, 192, 237,.2)' : '#fbfbfb';
-          const messageText = document.createElement('p');
-          messageText.classList.add('small', 'mb-0');
-          messageText.innerText = message;
-          messageContentDiv.appendChild(messageText);
-          messageDiv.appendChild(messageContentDiv);
-          chatBox.appendChild(messageDiv);
-          chatBox.scrollTop = chatBox.scrollHeight;
-        }
-      
-        // handle message submission
-        chatForm.addEventListener('submit', event => {
-          event.preventDefault();
-          const message = messageTextarea.value.trim();
-          if (message.length > 0) {
-            // emit message to server
-            socket.emit('chat message', { message });
-            messageTextarea.value = '';
-          }
-        });
-      
-        // listen for incoming messages from server
-        socket.on('chat message', msg => {
-          console.log('---->i am chat mess');
-          const message = msg.message.trim();
-          if (message.length > 0) {
-            addMessage(message, 'start');
-          }
-        });
-      </script>
-      
+<script>
+  const chatBox = document.getElementById('chat-box');
+  const chatForm = document.getElementById('chat-form');
+  const messageTextarea = document.getElementById('message-textarea');
+  const socket = io('http://localhost:8000'); // initialize Socket.io client
+
+  // add message to chat box
+  function addMessage(message, sender) {
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add('d-flex', 'flex-row', 'justify-content-' + sender, 'mb-4');
+    const messageContentDiv = document.createElement('div');
+    messageContentDiv.classList.add('p-3', sender === 'start' ? 'ms-3' : 'me-3', 'border');
+    messageContentDiv.style.borderRadius = '15px';
+    messageContentDiv.style.backgroundColor = sender === 'start' ? 'rgba(57, 192, 237,.2)' : '#fbfbfb';
+    const messageText = document.createElement('p');
+    messageText.classList.add('small', 'mb-0');
+    messageText.innerText = message;
+    messageContentDiv.appendChild(messageText);
+    messageDiv.appendChild(messageContentDiv);
+    chatBox.appendChild(messageDiv);
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }
+
+  // handle message submission
+  chatForm.addEventListener('submit', event => {
+    event.preventDefault();
+    const message = messageTextarea.value.trim();
+    const user = '<%= locals.user.name %>';
+    if (message.length > 0) {
+      // emit message to server
+      socket.emit('chat message', {
+          message,
+          user_name: user,
+       });
+      messageTextarea.value = '';
+    }
+  });
+
+  // listen for incoming messages from server
+  socket.on('chat message', msg => {
+    const message = msg.message.trim();
+    if (message.length > 0) {
+      addMessage(message, 'start');
+    }
+  });
+</script>
+
       <!-- <script src="http://localhost:8000/socket.io/socket.io.js"></script -->
       
     <% } %>

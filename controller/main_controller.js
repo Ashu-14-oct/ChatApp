@@ -1,10 +1,13 @@
 const User = require("../models/user");
 
 module.exports.home = function (req, res) {
+
   res.render("home", {
     title: "Home",
   });
 };
+
+
 
 module.exports.signIn = function (req, res) {
   return res.redirect("/");
