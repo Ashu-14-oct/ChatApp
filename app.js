@@ -61,42 +61,32 @@ app.use(passport.checkAuthentication);
 
 //socket io
 const http = require('http').Server(app);
-const io = require('socket.io')(http, {
-  cors: {
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST"],
-    allowedHeaders: ["my-custom-header"],
-    credentials: true
-  }
+
+http.listen(PORT, () => {
+  console.log(`Listening on port ${PORT}`)
 });
 
+const io = require('socket.io')(http)
 
-io.on('connection', function(socket){
-  console.log('User Conncetion');
-
-  socket.on('chat message', function(msg, user){
-    console.log(user);
-    console.log("Message " + msg['message'] + user);
-    io.emit('chat message', msg);
-  });
+io.on('connection', (socket) => {
+    console.log('Connected...')
+    socket.on('message', (msg) => {
+      console.log(msg);
+        socket.broadcast.emit('message', msg)
+    });
 });
-
-http.listen(8000, function() {
-  console.log('Node app is running on port', 8000);
-});
-
 
 //routes
 app.use("/", require("./routes/index"));
 
 
 //listening server on port
-app.listen(PORT, function (err) {
-  if (err) {
-    console.log(err);
-    return;
-  }
+// app.listen(PORT, function (err) {
+//   if (err) {
+//     console.log(err);
+//     return;
+//   }
 
-  console.log(`server running on port ${PORT}`);
-});
+//   console.log(`server running on port ${PORT}`);
+// });
 
