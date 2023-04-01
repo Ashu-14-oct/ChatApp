@@ -97,22 +97,18 @@
     let name;
     let textarea = document.querySelector("textarea");
     let messageArea = document.querySelector(".message__area");
-    do {
-      name = prompt("Chat as: ");
-    } while (!name);
   
     textarea.addEventListener("keyup", (e) => {
       // console.log("hello");
       if (e.key === "Enter") {
-        console.log(e.target.value);
+        console.log('<%= locals.user.name %>');
         sendMessage(e.target.value);
       }
     });
   
     function sendMessage(message) {
-      console.log(message);
       let msg = {
-        user: name,
+        user: '<%= locals.user.name %>',
         message: message.trim(),
       };
       // Append
