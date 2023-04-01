@@ -40,10 +40,12 @@ textarea {
 }
 .incoming {
     background: #8F8BE8;
+    border-radius: 20px;
     color: #fff;  
 }
 .outgoing {
     background: #e9eafd;
+    border-radius: 20px;
     color: #787986;
     margin-left: auto;
 }
