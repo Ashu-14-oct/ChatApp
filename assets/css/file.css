@@ -45,6 +45,7 @@ textarea {
 }
 .outgoing {
     background: #e9eafd;
+    min-width: 150px;
     border-radius: 20px;
     color: #787986;
     margin-left: auto;
