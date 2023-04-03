@@ -15,8 +15,10 @@ npm install
 </code></pre>
 
 
-Start the server by running the following command:  
-npm start  
+Start the server by running the following command:
+<pre><code>
+npm start
+</code></pre>
 Open your web browser and navigate to http://localhost:3000 to access the application.  
   
 Features:
