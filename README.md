@@ -1,4 +1,4 @@
-## Real-time Chat Engine
+## Real-time Chat App
 This is a real-time chat engine application built with Node.js, Express, Mongoose, and Socket.IO.
 
 Installation
